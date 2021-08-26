@@ -1,0 +1,12 @@
+package com.u17112631.helpers;
+
+public class Tuple<T,U> {
+    public T Item1;
+    public U Item2;
+
+    public Tuple(T item1,U item2){
+        item1 = item1;
+        item2 = item2;
+    }
+
+}
