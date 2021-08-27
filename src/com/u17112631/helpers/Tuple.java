@@ -5,8 +5,8 @@ public class Tuple<T,U> {
     public U Item2;
 
     public Tuple(T item1,U item2){
-        item1 = item1;
-        item2 = item2;
+        Item1 = item1;
+        Item2 = item2;
     }
 
 }
