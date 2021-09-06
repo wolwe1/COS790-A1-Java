@@ -1,5 +1,6 @@
 package com.u17112631.models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Solution
@@ -11,12 +12,12 @@ public class Solution
         Bins = bins;
     }
 
-    public void Summarise()
+    public void summarise()
     {
-        System.out.println(GetInfo());
+        System.out.println(getInfo());
     }
 
-    public String GetInfo()
+    public String getInfo()
     {
         var builder = new StringBuilder();
         builder.append("\n**Solution**");
@@ -46,9 +47,22 @@ public class Solution
 
         for  (var piece : bin.getPieces())
         {
-            builder.append("\t\t" + piece.GetInfo() );
+            builder.append("\t\t" + piece.getInfo() );
         }
 
         return builder.toString();
+    }
+
+    public Solution getCopy() {
+        return new Solution(getBins());
+    }
+
+    private List<Bin> getBins() {
+        var newBins = new ArrayList<Bin>();
+
+        for (var bin : Bins){
+            newBins.add(bin.GetCopy());
+        }
+        return newBins;
     }
 }

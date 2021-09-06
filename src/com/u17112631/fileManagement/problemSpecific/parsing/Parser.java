@@ -6,18 +6,20 @@ import com.u17112631.models.Piece;
 
 public abstract class Parser
 {
+    private static int pieceNumber = 0;
+
     protected static Piece ParsePiece(String pieceInfo)
     {
         var items = pieceInfo.split(" ");
         var numberOfVertices = Integer.parseInt(items[0]);
 
-        var piece = new Piece();
+        var piece = new Piece(pieceNumber++);
         for (int i = 1; i < numberOfVertices * 2; i+=2)
         {
             var x = Integer.parseInt(items[i]);
             var y = Integer.parseInt(items[i+1]);
 
-            piece.AddCoord(x,y);
+            piece.addCoord(x,y);
         }
 
         return piece;

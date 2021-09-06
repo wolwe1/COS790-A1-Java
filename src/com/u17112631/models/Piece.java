@@ -7,32 +7,40 @@ import java.util.Comparator;
 
 public class Piece
 {
-    private final ArrayList<Coordinate> _coords;
+    private final ArrayList<Coordinate> coords;
     private int[][] shape;
+    private final int id;
 
-    public Piece()
+    public Piece(int id)
     {
-        _coords = new ArrayList<>();
+        coords = new ArrayList<>();
+        this.id = id;
     }
 
-    public void AddCoord(int x, int y)
+    public void addCoord(int x, int y)
     {
-        _coords.add(new Coordinate(x,y));
+        coords.add(new Coordinate(x,y));
     }
-    public String GetInfo()
+
+    public void addCoord(Coordinate coord)
+    {
+        coords.add(coord);
+    }
+
+    public String getInfo()
     {
         var builder = new StringBuilder();
 
-        for (var i = 0; i < _coords.size(); i++)
+        for (var i = 0; i < coords.size(); i++)
         {
-            var coords = _coords.get(i);
+            var coords = this.coords.get(i);
             builder.append(i).append("-").append(coords.getX()).append(":").append(coords.getY());
         }
 
         return builder.toString();
     }
 
-    public Piece FillShape() {
+    public Piece fillShape() {
         var height = getHeight();
         var width = getWidth();
 
@@ -41,21 +49,39 @@ public class Piece
         return this;
     }
 
-    private int getWidth() {
-        var maxXcoord = _coords.stream().max(Comparator.comparing(Coordinate::getX)).get();
-        var minXcoord = _coords.stream().min(Comparator.comparing(Coordinate::getX)).get();
+    public int getWidth() {
+        var maxXcoord = coords.stream().max(Comparator.comparing(Coordinate::getX)).get();
+        var minXcoord = coords.stream().min(Comparator.comparing(Coordinate::getX)).get();
 
-        return maxXcoord.getY() - minXcoord.getY();
+        return maxXcoord.getX() - minXcoord.getX();
     }
 
-    private int getHeight() {
-        var maxYcoord = _coords.stream().max(Comparator.comparing(Coordinate::getY)).get();
-        var minYcoord = _coords.stream().min(Comparator.comparing(Coordinate::getY)).get();
+    public int getHeight() {
+        var maxYcoord = coords.stream().max(Comparator.comparing(Coordinate::getY)).get();
+        var minYcoord = coords.stream().min(Comparator.comparing(Coordinate::getY)).get();
 
         return maxYcoord.getY() - minYcoord.getY();
     }
 
     public ArrayList<Coordinate> getCoords() {
-        return _coords;
+        return coords;
+    }
+
+    public Piece getCopy() {
+        var newPiece = new Piece(id);
+
+        for (var coord : coords){
+            newPiece.addCoord(coord.GetCopy());
+        }
+
+        return newPiece;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public double getRectangularArea() {
+        return getHeight() * getWidth();
     }
 }

@@ -6,8 +6,8 @@ import com.u17112631.fileManagement.problemSpecific.parsing.SolutionParser;
 
 public class TestCase
 {
-    private ProblemSpecification _problem;
-    private Solution _solution;
+    private final ProblemSpecification _problem;
+    private final Solution _solution;
 
     public TestCase(FileContents problem, FileContents solution)
     {
@@ -18,6 +18,14 @@ public class TestCase
     public void Summarise()
     {
         _problem.Summarise();
-        _solution.Summarise();
+        _solution.summarise();
+    }
+
+    public ProblemSpecification GetProblem(){
+        return _problem.GetCopy();
+    }
+
+    public Solution GetSolution(){
+        return _solution.getCopy();
     }
 }

@@ -8,17 +8,32 @@ import java.util.List;
 
 public class CustomPaintComponent extends Component {
 
-    private List<Polygon> polygons;
+    private final List<Polygon> polygons;
+    private boolean drawBorder;
+
+    private int xOrigin;
+    private int xEnd;
+    private int yOrigin;
+    private int yEnd;
 
     public CustomPaintComponent() {
         this.polygons = new ArrayList<>();
+        drawBorder = true;
+
+        xOrigin = 50;
+        yOrigin = 50;
     }
 
     public Polygon createPolygon(Piece p){
         Polygon polygon = new Polygon();
 
         for (var coord : p.getCoords()){
-            polygon.addPoint(coord.getX(), coord.getY());
+            var xCoord = coord.getX() + xOrigin; //Left shift
+            var yCoord = coord.getY() + yOrigin; //Down shift
+
+            yCoord = yEnd - yCoord;
+
+            polygon.addPoint(xCoord,yCoord );
         }
 
         return polygon;
@@ -29,10 +44,13 @@ public class CustomPaintComponent extends Component {
 
         // Retrieve the graphics context; this object is used to paint shapes
 
-        Graphics2D g2d = (Graphics2D) g;
+        Graphics2D window = (Graphics2D) g;
+
+        if(drawBorder)
+            drawBorder(window);
 
         for (var polygon : polygons){
-            g2d.fillPolygon(polygon);
+            window.fillPolygon(polygon);
         }
 
     }
@@ -46,36 +64,29 @@ public class CustomPaintComponent extends Component {
         return addPoly(createPolygon(piece));
     }
 
+    public CustomPaintComponent drawBorder(Graphics2D window){
+
+        /**
+         * The coordinate system of a graphics context is such that the origin is at the
+         * northwest corner and x-axis increases toward the right while the y-axis increases
+         * toward the bottom.
+         */
+
+        window.drawLine(xOrigin,yEnd,xEnd,yEnd); //top
+        window.drawLine(xOrigin,yOrigin,xEnd,yOrigin);//bottom
+        window.drawLine(xEnd,yOrigin,xEnd,yEnd);//right
+        window.drawLine(xOrigin,yOrigin,xOrigin,yEnd); //left
+
+        return this;
+    }
+
+    public void setEnds() {
+        xEnd = getSize().width - 50;
+
+        yEnd = getSize().height - 50;
+    }
 //    public void paint(Graphics g) {
 //
-//        // Retrieve the graphics context; this object is used to paint shapes
-//        Graphics2D g2d = (Graphics2D) g;
-//
-//        // Draw an oval that fills the window
-//
-//        int x = 0;
-//
-//        int y = 0;
-//
-//        int w = getSize().width - 1;
-//
-//        int h = getSize().height - 1;
-//
-//        /**
-//         * The coordinate system of a graphics context is such that the origin is at the
-//         * northwest corner and x-axis increases toward the right while the y-axis increases
-//         * toward the bottom.
-//         */
-//
-//        g2d.drawLine(x, y, w, h);
-//
-//        // to draw a filled oval use : g2d.fillOval(x, y, w, h) instead
-//
-//        g2d.drawOval(x, y, w, h);
-//
-//        // to draw a filled rectangle use : g2d.fillRect(x, y, w, h) instead
-//
-//        g2d.drawRect(x, y, w, h);
 //
 //        // A start angle of 0 represents a 3 o'clock position, 90 represents a 12 o'clock position,
 //

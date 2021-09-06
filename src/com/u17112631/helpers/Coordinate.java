@@ -23,4 +23,8 @@ public class Coordinate {
     public int setY(int y){
         return coord.Item2 = y;
     }
+
+    public Coordinate GetCopy() {
+        return new Coordinate(coord.Item1,coord.Item2);
+    }
 }

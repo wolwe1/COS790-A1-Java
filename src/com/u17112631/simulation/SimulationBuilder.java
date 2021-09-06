@@ -1,7 +1,7 @@
 package com.u17112631.simulation;
 
-import com.u17112631.heuristics.placement.IPlacementHeuristic;
-import com.u17112631.heuristics.selector.ISelectorHeuristic;
+import com.u17112631.heuristics.binSelection.IBinSelectionHeuristic;
+import com.u17112631.heuristics.objectSelection.IObjectSelectorHeuristic;
 import com.u17112631.models.BinPackingSimulation;
 import com.u17112631.models.ProblemSpecification;
 
@@ -9,27 +9,30 @@ import java.util.List;
 
 public class SimulationBuilder {
 
-    private HeuristicMapper mapper;
+    private final HeuristicMapper mapper;
     private ProblemSpecification specification;
 
-    public SimulationBuilder(HeuristicMapper mapper) {
+    public SimulationBuilder(HeuristicMapper mapper, ProblemSpecification specification) {
         this.mapper = mapper;
+        this.specification = specification;
     }
 
     public BinPackingSimulation build(String heuristicComb) {
 
-        List<ISelectorHeuristic> selectorHeuristicList = mapper.getSelectionHeuristics(heuristicComb);
-        List<IPlacementHeuristic> placementHeuristicList = mapper.getPlacementHeuristics(heuristicComb);
+        List<IObjectSelectorHeuristic> selectorHeuristicList = mapper.getSelectionHeuristics(heuristicComb);
+        List<IBinSelectionHeuristic> placementHeuristicList = mapper.getPlacementHeuristics(heuristicComb);
 
         var simulation = new BinPackingSimulation();
 
         for (int i = 0, heuristicListSize = selectorHeuristicList.size(); i < heuristicListSize; i++) {
-            ISelectorHeuristic selectorHeuristic = selectorHeuristicList.get(i);
-            IPlacementHeuristic insertionHeuristic = placementHeuristicList.get(i);
+            IObjectSelectorHeuristic selectorHeuristic = selectorHeuristicList.get(i);
+            IBinSelectionHeuristic insertionHeuristic = placementHeuristicList.get(i);
 
-            var selectedItems = selectorHeuristic.choose(specification);
+            var objectToPlace = selectorHeuristic.choose(specification);
 
-            simulation = insertionHeuristic.apply(simulation,selectedItems);
+            specification = specification.removePiece(objectToPlace);
+
+            simulation = insertionHeuristic.apply(simulation,objectToPlace);
         }
 
         return simulation;

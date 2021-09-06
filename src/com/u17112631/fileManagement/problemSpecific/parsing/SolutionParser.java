@@ -1,7 +1,9 @@
 package com.u17112631.fileManagement.problemSpecific.parsing;
 
 import com.u17112631.fileManagement.file.FileContents;
+import com.u17112631.helpers.Tuple;
 import com.u17112631.models.Bin;
+import com.u17112631.models.Piece;
 import com.u17112631.models.Solution;
 
 import java.util.ArrayList;
@@ -12,48 +14,47 @@ public class SolutionParser extends Parser
 {
     public static Solution Parse(FileContents solution)
     {
-        var bins = CreateBins(solution);
+        var numberOfBins = getNumberOfBins(solution);
 
-        var numberOfPiecesInSolution = bins.stream().map(x -> x.GetNumberOfPiecesInside()).reduce(0,Integer::sum);
+        var dimensions = GetBinDimensions(solution);
+        var numItemsInBins = GetNumberOfItemsInBins(solution);
+
+        var numberOfPiecesInSolution = numItemsInBins.stream().reduce(0,Integer::sum);
 
         var pieces = solution.GetLinesFrom(2, numberOfPiecesInSolution)
-                .stream().map(x -> ParsePiece(x)).collect(Collectors.toList());
+                .stream().map(Parser::ParsePiece).collect(Collectors.toList());
 
-        for (int i = 0; i < bins.size(); i++) {
-            var bin = bins.get(i);
+        ArrayList<Bin> newBins = createBins(numberOfBins, dimensions, numItemsInBins, pieces);
+        return new Solution(newBins);
+    }
 
-            var startPieceIndex = i * bin.GetNumberOfPiecesInside();
-            var endPieceIndex = startPieceIndex + bin.GetNumberOfPiecesInside();
+    private static ArrayList<Bin> createBins(int numberOfBins, Tuple<Integer, Integer> dimensions, List<Integer> numItemsInBins, List<Piece> pieces) {
+        var newBins = new ArrayList<Bin>();
+
+        for (int i = 0; i < numberOfBins; i++) {
+
+            var startPieceIndex = i * numItemsInBins.get(i);
+            var endPieceIndex = startPieceIndex + numItemsInBins.get(i);
 
             var piecesInBin = pieces.subList(startPieceIndex,endPieceIndex);
-            bin.setPieces(piecesInBin);
 
+            var newBin = new Bin(dimensions.Item1, dimensions.Item2);
+            newBin.setPieces(piecesInBin);
+
+            newBins.add(newBin);
         }
-        return new Solution(bins);
+        return newBins;
     }
 
-    private static List<Bin> CreateBins(FileContents solution)
-    {
+    private static int getNumberOfBins(FileContents solution){
         var binInfo = solution.Get(0).split(" ");
 
-        var coords = GetBinDimensions(solution);
-        var numItemsInBin = GetNumberOfItemsInBins(binInfo);
-
-        return CreateBins(numItemsInBin, coords.Item1, coords.Item2);
+        return Integer.parseInt(binInfo[0]);
     }
 
-    private static List<Bin> CreateBins(List<Integer> numItemsInBin, int binX, int binY)
+    private static List<Integer> GetNumberOfItemsInBins(FileContents solution)
     {
-        var bins = new ArrayList<Bin>();
-        for  (var numberOfItems : numItemsInBin)
-        {
-            bins.add(new Bin(numberOfItems, binX, binY));
-        }
-        return bins;
-    }
-
-    private static List<Integer> GetNumberOfItemsInBins(String[] binInfo)
-    {
+        var binInfo = solution.Get(0).split(" ");
         var numBins = Integer.parseInt(binInfo[0]);
 
         var numItemsInBin = new ArrayList<Integer>();

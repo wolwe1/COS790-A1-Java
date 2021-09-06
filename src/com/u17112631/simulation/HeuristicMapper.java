@@ -1,7 +1,7 @@
 package com.u17112631.simulation;
 
-import com.u17112631.heuristics.placement.IPlacementHeuristic;
-import com.u17112631.heuristics.selector.ISelectorHeuristic;
+import com.u17112631.heuristics.binSelection.IBinSelectionHeuristic;
+import com.u17112631.heuristics.objectSelection.IObjectSelectorHeuristic;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -9,12 +9,12 @@ import java.util.List;
 
 public class HeuristicMapper {
 
-    Hashtable<Character, ISelectorHeuristic> selectorHeuristicTable = new Hashtable<>();
-    Hashtable<Character, IPlacementHeuristic> placementHeuristicTable = new Hashtable<>();
+    Hashtable<Character, IObjectSelectorHeuristic> selectorHeuristicTable = new Hashtable<>();
+    Hashtable<Character, IBinSelectionHeuristic> placementHeuristicTable = new Hashtable<>();
 
-    public List<ISelectorHeuristic> getSelectionHeuristics(String heuristic) {
+    public List<IObjectSelectorHeuristic> getSelectionHeuristics(String heuristic) {
 
-        List<ISelectorHeuristic> heuristicList = new ArrayList<>();
+        List<IObjectSelectorHeuristic> heuristicList = new ArrayList<>();
 
         for (int i = 0; i < heuristic.length(); i += 2){
             char selectionHeuristicIndicator = heuristic.charAt(i);
@@ -24,9 +24,9 @@ public class HeuristicMapper {
         return heuristicList;
     }
 
-    public List<IPlacementHeuristic> getPlacementHeuristics(String heuristic) {
+    public List<IBinSelectionHeuristic> getPlacementHeuristics(String heuristic) {
 
-        List<IPlacementHeuristic> heuristicList = new ArrayList<>();
+        List<IBinSelectionHeuristic> heuristicList = new ArrayList<>();
 
         for (int i = 1; i < heuristic.length(); i += 2){
             char placementHeuristicIndicator = heuristic.charAt(i);
@@ -37,7 +37,7 @@ public class HeuristicMapper {
         return heuristicList;
     }
 
-    public HeuristicMapper addMapping(char character, ISelectorHeuristic selectorHeuristic,IPlacementHeuristic placementHeuristic){
+    public HeuristicMapper addMapping(char character, IObjectSelectorHeuristic selectorHeuristic, IBinSelectionHeuristic placementHeuristic){
 
         addMapping(character,selectorHeuristic);
         addMapping(character,placementHeuristic);
@@ -45,13 +45,13 @@ public class HeuristicMapper {
         return this;
     }
 
-    public HeuristicMapper addMapping(char character, ISelectorHeuristic heuristic){
+    public HeuristicMapper addMapping(char character, IObjectSelectorHeuristic heuristic){
 
         selectorHeuristicTable.put(character,heuristic);
         return this;
     }
 
-    public HeuristicMapper addMapping(char character, IPlacementHeuristic heuristic){
+    public HeuristicMapper addMapping(char character, IBinSelectionHeuristic heuristic){
 
         placementHeuristicTable.put(character,heuristic);
         return this;

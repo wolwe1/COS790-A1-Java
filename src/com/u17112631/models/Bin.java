@@ -1,32 +1,31 @@
 package com.u17112631.models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Bin
 {
-    private final int _numberOfObjects;
-    private final int _width;
-    private final int _height;
+    private final int width;
+    private final int height;
     private List<Piece> pieces;
 
-    public Bin(int numberOfObjects, int width, int height)
+    public Bin(int width, int height)
     {
-        _numberOfObjects = numberOfObjects;
-        _width = width;
-        _height = height;
+        this.width = width;
+        this.height = height;
     }
 
     public int GetNumberOfPiecesInside()
     {
-        return _numberOfObjects;
+        return pieces.size();
     }
 
     public int getWidth() {
-        return _width;
+        return width;
     }
 
     public int getHeight() {
-        return _height;
+        return height;
     }
 
     public void setPieces(List<Piece> piecesInBin) {
@@ -34,7 +33,18 @@ public class Bin
     }
 
     public List<Piece> getPieces() {
-        return pieces;
+        var newPieces = new ArrayList<Piece>();
+
+        for(var piece : pieces){
+            newPieces.add(piece.getCopy());
+        }
+        return newPieces;
     }
 
+    public Bin GetCopy() {
+        var newBin = new Bin(width, height);
+
+        newBin.setPieces(getPieces());
+        return newBin;
+    }
 }
