@@ -10,8 +10,10 @@ public class BinPackingSolution extends InitialSoln {
     private String heuristic;
     private double fitness;
 
-    private IFitnessFunction fitnessFunction;
-    private SimulationBuilder simulationBuilder;
+    private final IFitnessFunction fitnessFunction;
+    private final SimulationBuilder simulationBuilder;
+
+    private BinPackingSimulation simulation;
 
     public BinPackingSolution(IFitnessFunction function, SimulationBuilder simulationBuilder){
         this.fitnessFunction = function;
@@ -32,7 +34,11 @@ public class BinPackingSolution extends InitialSoln {
 
     @Override
     public Object getSoln() {
-        return simulationBuilder.build(heuristic);
+        if(simulation == null){
+            simulation = simulationBuilder.build(heuristic);
+        }
+
+        return simulation;
     }
 
     private BinPackingSimulation createSimulation() {
@@ -41,12 +47,18 @@ public class BinPackingSolution extends InitialSoln {
 
     @Override
     public void setHeuCom(String s) {
-        this.heuristic = s;
-        this.fitness = this.fitnessFunction.Evaluate((BinPackingSimulation) this.getSoln());
+
+        //Must have even combinations
+        if(s.length() % 2 != 0)
+            this.heuristic = s + s;
     }
 
     @Override
     public String getHeuCom() {
         return this.heuristic;
+    }
+
+    public void evaluate() {
+        this.fitness = this.fitnessFunction.Evaluate((BinPackingSimulation) this.getSoln());
     }
 }

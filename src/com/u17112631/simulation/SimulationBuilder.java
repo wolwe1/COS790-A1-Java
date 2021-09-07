@@ -10,11 +10,11 @@ import java.util.List;
 public class SimulationBuilder {
 
     private final HeuristicMapper mapper;
-    private ProblemSpecification specification;
+    private final ProblemSpecification originalSpecification;
 
     public SimulationBuilder(HeuristicMapper mapper, ProblemSpecification specification) {
         this.mapper = mapper;
-        this.specification = specification;
+        this.originalSpecification = specification;
     }
 
     public BinPackingSimulation build(String heuristicComb) {
@@ -22,19 +22,28 @@ public class SimulationBuilder {
         List<IObjectSelectorHeuristic> selectorHeuristicList = mapper.getSelectionHeuristics(heuristicComb);
         List<IBinSelectionHeuristic> placementHeuristicList = mapper.getPlacementHeuristics(heuristicComb);
 
-        var simulation = new BinPackingSimulation();
+        var specification = originalSpecification.getCopy();
+        var simulation = new BinPackingSimulation(specification);
 
-        for (int i = 0, heuristicListSize = selectorHeuristicList.size(); i < heuristicListSize; i++) {
-            IObjectSelectorHeuristic selectorHeuristic = selectorHeuristicList.get(i);
-            IBinSelectionHeuristic insertionHeuristic = placementHeuristicList.get(i);
+        int heuristicIndex = 0;
+        while (!simulationComplete(simulation,specification)){
+            IObjectSelectorHeuristic selectorHeuristic = selectorHeuristicList.get(heuristicIndex);
+            IBinSelectionHeuristic binSelectionHeuristic = placementHeuristicList.get(heuristicIndex);
 
             var objectToPlace = selectorHeuristic.choose(specification);
-
             specification = specification.removePiece(objectToPlace);
 
-            simulation = insertionHeuristic.apply(simulation,objectToPlace);
+            var binToPlace =
+
+                    simulation = binSelectionHeuristic.placeInBin(simulation,objectToPlace);
+
+            heuristicIndex = (heuristicIndex + 1) % heuristicComb.length();
         }
 
         return simulation;
+    }
+
+    private boolean simulationComplete(BinPackingSimulation simulation,ProblemSpecification specification) {
+        return specification.getNumberOfPieces() == 0;
     }
 }

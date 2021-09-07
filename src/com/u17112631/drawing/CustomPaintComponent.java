@@ -27,7 +27,7 @@ public class CustomPaintComponent extends Component {
     public Polygon createPolygon(Piece p){
         Polygon polygon = new Polygon();
 
-        for (var coord : p.getCoords()){
+        for (var coord : p.getVertices()){
             var xCoord = coord.getX() + xOrigin; //Left shift
             var yCoord = coord.getY() + yOrigin; //Down shift
 

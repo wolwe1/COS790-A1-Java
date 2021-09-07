@@ -3,6 +3,7 @@ package com.u17112631;
 import com.u17112631.ProblemDomain.BinPackingProblemDomain;
 import com.u17112631.drawing.CustomPaintComponent;
 import com.u17112631.drawing.Drawer;
+import com.u17112631.drawing.GUIControl;
 import com.u17112631.fitnessFunctions.UtilizedSpaceFitnessFunction;
 import com.u17112631.fitnessFunctions.maxmin.MinimisationStrategy;
 import com.u17112631.heuristics.binSelection.BestFitHeuristic;
@@ -49,21 +50,39 @@ public class Main {
         SimulationBuilder builder = new SimulationBuilder(mapper,specification);
 
         BinPackingProblemDomain problemDomain = new BinPackingProblemDomain(usff, builder);
-//
-        GenAlg alg = new GenAlg(0,"abc");
+
+        GenAlg alg = new GenAlg(0,"abcde");
         alg.setParameters("GeneticAlgParams.txt");
+        alg.setPopulationSize(10);
+        alg.setTournamentSize(3);
+        alg.setNoOfGenerations(5);
+        alg.setMutationRate(0.3);
+        alg.setCrossoverRate(0.3);
+        alg.setInitialMaxLength(4);
+        alg.setOffspringMaxLength(8);
+        alg.setMutationLength(2);
         alg.setProblem(problemDomain);
         alg.evolve();
 
-        ;
+
+
+        //animate();
+
     }
 
 
-    boolean pnpoly(int numberOfVertices, List<Integer> polygonVerticesXValues, List<Integer> polygonVerticesYValues, int testx, int testy)
+
+    static void animate(){
+        GUIControl control = new GUIControl();
+
+        control.animate();
+    }
+
+    static boolean pnpoly(List<Integer> polygonVerticesXValues, List<Integer> polygonVerticesYValues, int testx, int testy)
     {
-        int i, j = 0;
+        int numberOfVertices = polygonVerticesXValues.size();
         boolean c = false;
-        for (i = 0, j = numberOfVertices-1; i < numberOfVertices; j = i++) {
+        for (int i = 0, j = numberOfVertices-1; i < numberOfVertices; j = i++) {
             if ( ((polygonVerticesYValues.get(i) >testy) != (polygonVerticesYValues.get(j)> testy)) &&
                     (testx < (polygonVerticesXValues.get(j)-polygonVerticesXValues.get(i)) * (testy-polygonVerticesYValues.get(i) / (polygonVerticesYValues.get(j)-polygonVerticesYValues.get(i)) + polygonVerticesXValues.get(i)) ) )
                 c = !c;

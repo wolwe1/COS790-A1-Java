@@ -6,6 +6,7 @@ import java.util.List;
 public class FileContents
 {
     private final ArrayList<String> _lines;
+    private String filename;
 
     public FileContents()
     {
@@ -24,6 +25,10 @@ public class FileContents
 
     public List<String> GetLinesFrom(int i, int numberOfItems)
     {
-        return _lines.subList(i, numberOfItems);
+        return _lines.subList(i, numberOfItems + i);
+    }
+
+    public void setFileName(String fileName) {
+        this.filename = fileName;
     }
 }

@@ -16,7 +16,7 @@ public class HeuristicMapper {
 
         List<IObjectSelectorHeuristic> heuristicList = new ArrayList<>();
 
-        for (int i = 0; i < heuristic.length(); i += 2){
+        for (int i = 0; i < heuristic.length(); i+=2){
             char selectionHeuristicIndicator = heuristic.charAt(i);
             heuristicList.add(selectorHeuristicTable.get(selectionHeuristicIndicator));
         }
@@ -28,8 +28,8 @@ public class HeuristicMapper {
 
         List<IBinSelectionHeuristic> heuristicList = new ArrayList<>();
 
-        for (int i = 1; i < heuristic.length(); i += 2){
-            char placementHeuristicIndicator = heuristic.charAt(i);
+        for (int i = 1; i < heuristic.length(); i+=2){
+            char placementHeuristicIndicator = heuristic.charAt(i%heuristic.length());
 
             heuristicList.add(placementHeuristicTable.get(placementHeuristicIndicator));
         }

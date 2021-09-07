@@ -5,7 +5,7 @@ import com.u17112631.models.Piece;
 
 public interface IBinSelectionHeuristic {
 
-    BinPackingSimulation apply(BinPackingSimulation simulation, Piece objectToPlace);
+    BinPackingSimulation placeInBin(BinPackingSimulation simulation, Piece objectToPlace);
 }
 
 

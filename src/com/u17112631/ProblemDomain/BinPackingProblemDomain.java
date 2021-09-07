@@ -20,6 +20,7 @@ public class BinPackingProblemDomain extends ProblemDomain {
     public InitialSoln evaluate(String s) {
         var solution = new BinPackingSolution(fitnessFunction, builder);
         solution.setHeuCom(s);
+        solution.evaluate();
 
         return solution;
     }

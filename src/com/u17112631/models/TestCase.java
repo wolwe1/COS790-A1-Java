@@ -22,7 +22,7 @@ public class TestCase
     }
 
     public ProblemSpecification GetProblem(){
-        return _problem.GetCopy();
+        return _problem.getCopy();
     }
 
     public Solution GetSolution(){

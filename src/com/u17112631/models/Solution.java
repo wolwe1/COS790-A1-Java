@@ -61,7 +61,7 @@ public class Solution
         var newBins = new ArrayList<Bin>();
 
         for (var bin : Bins){
-            newBins.add(bin.GetCopy());
+            newBins.add(bin.getCopy());
         }
         return newBins;
     }

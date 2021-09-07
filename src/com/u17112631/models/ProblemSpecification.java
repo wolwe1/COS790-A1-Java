@@ -48,7 +48,7 @@ public class ProblemSpecification
         return builder.toString();
     }
 
-    public ProblemSpecification GetCopy() {
+    public ProblemSpecification getCopy() {
         return new ProblemSpecification(getBinHeight(),getBinWidth(),getPieces());
     }
 
@@ -93,4 +93,9 @@ public class ProblemSpecification
         throw new RuntimeException("Piece with ID " + largestPieceId + " could not be found");
 
     }
+
+    public int getNumberOfPieces() {
+        return Pieces.size();
+    }
+
 }

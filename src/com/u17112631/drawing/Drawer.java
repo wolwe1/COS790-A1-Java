@@ -2,23 +2,24 @@ package com.u17112631.drawing;
 
 import com.u17112631.helpers.Coordinate;
 import com.u17112631.models.Piece;
+import com.u17112631.simulation.Board;
 
 import java.util.ArrayList;
 
 public class Drawer {
-    private Board board;
+    private DisplayBoard displayBoard;
 
     public Drawer(){
-        board = new Board(100,100);
+        displayBoard = new DisplayBoard(100,100);
     }
 
     public Drawer createBoard(int height,int width){
-        board = new Board(height,width);
+        displayBoard = new DisplayBoard(height,width);
         return this;
     }
 
     public void draw(){
-        board.draw();
+        displayBoard.draw();
     }
 
     public Drawer addPiece(Piece p,int bottomLeftX,int bottomLeftY) {
@@ -26,27 +27,27 @@ public class Drawer {
         var pieceBoard = createPieceBoard(p);
 
         pieceBoard.draw();
-        board.setSubBoard(pieceBoard,bottomLeftX,bottomLeftY);
+        displayBoard.setSubBoard(pieceBoard,bottomLeftX,bottomLeftY);
 
         return this;
     }
 
     public Drawer addPiece(Piece p) {
 
-        var middleX = board.getWidth() / 2;
-        var middleY = board.getHeigh() / 2;
+        var middleX = displayBoard.getWidth() / 2;
+        var middleY = displayBoard.getHeigh() / 2;
 
         return addPiece(p,middleX,middleY);
     }
 
-    private Board createPieceBoard(Piece p){
+    private DisplayBoard createPieceBoard(Piece p){
 
         int pieceHeight = p.getHeight() + 1;
         int pieceWidth = p.getWidth() + 1;
 
-        var pieceBoard = new Board(pieceHeight,pieceWidth);
+        var pieceBoard = new DisplayBoard(pieceHeight,pieceWidth);
 
-        ArrayList<Coordinate> coords = p.getCoords();
+        ArrayList<Coordinate> coords = p.getVertices();
         for (int i = 0, coordsSize = coords.size(); i < coordsSize; i++) {
             Coordinate point = coords.get(i);
             Coordinate nextPoint = coords.get( (i + 1) % coordsSize);
@@ -77,17 +78,17 @@ public class Drawer {
         }
         return pieceBoard;
     }
-    private Board drawLine(Board pieceBoard, Coordinate point, Coordinate nextPoint, int differenceInX, int differenceInY, int distance, int currentY){
+    private DisplayBoard drawLine(DisplayBoard pieceDisplayBoard, Coordinate point, Coordinate nextPoint, int differenceInX, int differenceInY, int distance, int currentY){
         if(point.getX() == nextPoint.getX()){
             //vertical draw
 
-            return verticalDraw(pieceBoard, point, nextPoint, currentY,point.getX());
+            return verticalDraw(pieceDisplayBoard, point, nextPoint, currentY,point.getX());
         }else{
             //Horizontal draw
-            return horizontalDraw(pieceBoard, point, nextPoint, differenceInX, differenceInY, distance, currentY);
+            return horizontalDraw(pieceDisplayBoard, point, nextPoint, differenceInX, differenceInY, distance, currentY);
         }
     }
-    private Board horizontalDraw(Board pieceBoard, Coordinate point, Coordinate nextPoint, int differenceInX, int differenceInY, int distance, int currentY) {
+    private DisplayBoard horizontalDraw(DisplayBoard pieceDisplayBoard, Coordinate point, Coordinate nextPoint, int differenceInX, int differenceInY, int distance, int currentY) {
 
         Coordinate smallerXPoint = point.getX() < nextPoint.getX() ? point : nextPoint;
         Coordinate biggerXPoint = point.getX() > nextPoint.getX() ? point : nextPoint;
@@ -99,7 +100,7 @@ public class Drawer {
         //int yStep = 1;
 
         for (int x = smallerXPoint.getX(); x < biggerXPoint.getX(); x++) {
-            pieceBoard.set(x, currentY,"*");
+            pieceDisplayBoard.set(x, currentY,"*");
 
             if ( distance > 0){
                 currentY = currentY + yStep;
@@ -109,18 +110,28 @@ public class Drawer {
             distance = distance + 2 * differenceInY;
         }
 
-        return pieceBoard;
+        return pieceDisplayBoard;
     }
 
-    private Board verticalDraw(Board pieceBoard, Coordinate point, Coordinate nextPoint, int currentY, int x) {
+    private DisplayBoard verticalDraw(DisplayBoard pieceDisplayBoard, Coordinate point, Coordinate nextPoint, int currentY, int x) {
 
         int smaller = Math.min(point.getY(), nextPoint.getY());
         int bigger = Math.max(point.getY(), nextPoint.getY());
 
         for (int y = smaller; y < bigger; y++) {
-            pieceBoard.set(x, y,"*");
+            pieceDisplayBoard.set(x, y,"*");
         }
 
-        return pieceBoard;
+        return pieceDisplayBoard;
+    }
+
+    public void displayBoard(Board board) {
+        DisplayBoard displayBoard = new DisplayBoard(board);
+        displayBoard.draw();
+    }
+
+    public void displayBoard(Board board,String colour) {
+        DisplayBoard displayBoard = new DisplayBoard(board);
+        displayBoard.draw(colour);
     }
 }

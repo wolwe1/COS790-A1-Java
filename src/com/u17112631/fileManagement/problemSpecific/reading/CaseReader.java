@@ -7,15 +7,16 @@ import com.u17112631.models.TestCase;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class CaseReader
 {
-    private FileManager _reader;
-    private ArrayList<FileParser> _problemParsers;
-    private ArrayList<FileParser> _solutionParsers;
+    private final FileManager _reader;
+    private final ArrayList<FileParser> _problemParsers;
+    private final ArrayList<FileParser> _solutionParsers;
 
     public CaseReader() throws IOException {
         _reader = new FileManager();
@@ -33,20 +34,24 @@ public class CaseReader
 
     public List<TestCase> Get()
     {
-        var problemFiles = _problemParsers.stream().map(x -> x.Read(_reader));
-        var solutionFiles = _solutionParsers.stream().map(x -> x.Read(_reader));
+        var problemFiles = _problemParsers.stream().map(x -> x.Read(_reader)).collect(Collectors.toList());
+        var solutionFiles = _solutionParsers.stream().map(x -> x.Read(_reader)).collect(Collectors.toList());
 
         var problems = CombineAndRemoveFailures(problemFiles);
         var solutions = CombineAndRemoveFailures(solutionFiles);
 
+        if(problems.size() == 0 || solutions.size() == 0)
+            throw new RuntimeException("No problem or solution files loaded");
+
         return CreateTestCases(problems, solutions);
     }
 
-    private static List<FileContents> CombineAndRemoveFailures(Stream<List<FileContents>> files)
+    private static List<FileContents> CombineAndRemoveFailures(List<List<FileContents>> files)
     {
         return files
-                .flatMap(x -> x.stream())
-                .filter(x -> x != null)
+                .stream()
+                .flatMap(Collection::stream)
+                .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
     private static List<TestCase> CreateTestCases(List<FileContents> problemFiles, List<FileContents> solutionFiles)

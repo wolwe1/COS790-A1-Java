@@ -17,7 +17,7 @@ public class TestManager {
 
     public TestManager() throws IOException {
         CaseReader reader = new CaseReader()
-                .Include("TA",0,1);
+                .Include("TA",1,2);
 
         testCases = reader.Get();
         currentTestIndex = 0;

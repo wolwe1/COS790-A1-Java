@@ -16,7 +16,9 @@ public class FileManager
     private String GetBasePath() throws IOException {
         File currentDirFile = new File(".");
         String helper = currentDirFile.getAbsolutePath();
-        return currentDirFile.getParent();
+        String absPath = helper.substring(0, helper.length() - 1);
+        absPath += "cases\\";
+        return absPath;
     }
 
     private String GetFilePath()
@@ -28,13 +30,14 @@ public class FileManager
     {
         FileContents contents = null;
 
-        var targetFile = GetFilePath() + "\\cases\\" + fileName + ".txt";
+        var targetFile = GetFilePath() + fileName + ".txt";
         try
         {
             var file = new File(targetFile);
             Scanner myReader = new Scanner(file);
 
             contents = ReadFile(myReader);
+            contents.setFileName(fileName);
             myReader.close();
         }
         catch(Exception e)

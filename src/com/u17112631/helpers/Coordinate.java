@@ -27,4 +27,8 @@ public class Coordinate {
     public Coordinate GetCopy() {
         return new Coordinate(coord.Item1,coord.Item2);
     }
+
+    public Coordinate shift(int xAmount, int yAmount) {
+        return new Coordinate(getX() + xAmount,getY() + yAmount);
+    }
 }

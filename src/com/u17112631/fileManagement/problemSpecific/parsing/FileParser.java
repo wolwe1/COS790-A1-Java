@@ -28,11 +28,9 @@ public class FileParser
         fileNumberRange = _stop == 0 ? new ArrayList<>(){ {add(0);}} : IntStream.rangeClosed(_start, _stop)
                 .boxed().collect(Collectors.toList());;
 
-        var fileNumber = fileNumberRange.stream()
+        return fileNumberRange.stream()
                 .map(x -> ConvertNumberToString(x))
                 .map(x -> reader.Read(_filePrefix + x)).collect(Collectors.toList());
-
-        return fileNumber;
     }
 
     private String ConvertNumberToString(int number)
